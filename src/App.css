@@ -24,10 +24,73 @@ html,body,#root { height: 100%; }
   border-bottom: 1px solid rgba(255,255,255,0.02);
 }
 .b-left { display:flex; gap:12px; align-items:center; }
-.menu-btn { background:transparent; border:none; color: #fff; font-size:20px; padding:8px; border-radius:10px; }
+.menu-btn { background:transparent; border:none; color: #fff; font-size:50px; padding:8px; border-radius:10px; }
 .app-title { font-size:45px; font-weight:800; letter-spacing: -0.5px; color:#fff; }
 .month-label { color: rgba(255,255,255,0.75); font-weight:600; font-size:35px;  }
 .b-header {justify-content: space-between;}
+
+.modal-title {
+  font-size: 33px;
+  color:#fff;
+  margin-bottom:10px;
+  font-weight:800;
+}
+
+/* INPUT DO TÍTULO – Glass Premium */
+.title-input {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+
+  padding: 12px 16px;
+
+  color: #e9e911;
+  font-weight: 800;
+
+  /* Mantém o tamanho gigante que você já usa */
+  font-size: 43px;
+
+  backdrop-filter: blur(14px);
+
+  transition: all 0.25s ease;
+  box-shadow: 0 0 0 rgba(255,199,85,0.0);
+}
+
+/* Placeholder – elegante e discreto */
+.title-input::placeholder {
+ 
+  color: #000;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+/* Safari / iOS */
+.title-input::-webkit-input-placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* Firefox */
+.title-input::-moz-placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* Edge / antigos */
+.title-input:-ms-input-placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* EFEITO AO PASSAR O DEDO / FOCUS */
+.title-input:focus {
+  border-color: rgba(255,199,85,0.45);
+  box-shadow: 0 0 24px rgba(255,199,85,0.15);
+  outline: none;
+  transform: translateY(-2px);
+}
+
+/* opcional: efeito hover */
+.title-input:hover {
+  border-color: rgba(7, 145, 58, 0.12);
+}
 
 /* main layout */
 .b-main { padding: 14px 12px 80px; display:block; }
@@ -36,7 +99,7 @@ html,body,#root { height: 100%; }
 .calendar-wrap { margin-top: 8px; margin-bottom: 18px; }
 .cal-row { display:flex; gap:10px; justify-content:flex-start; overflow-x:auto; padding-bottom:6px; -webkit-overflow-scrolling: touch; }
 .cal-cell {
-  min-width:84px; max-width:84px; width:84px;
+  min-width:94px; max-width:94px; width:94px;
   background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
   border-radius:14px;
   padding:10px 6px;
@@ -45,11 +108,20 @@ html,body,#root { height: 100%; }
   box-shadow: 0 10px 30px rgba(3,6,12,0.65);
   transition: transform 220ms cubic-bezier(.2,.9,.3,1), box-shadow 220ms;
 }
-.cal-cell + .cal-cell { margin-left:8px; }
-.cal-week { font-size:12px; color: rgba(255,255,255,0.6); margin-bottom:6px; font-weight:700; }
-.cal-num { font-size:18px; font-weight:900; color:#fff; }
+.cal-cell + .cal-cell { margin-left:25px; }
+.cal-week { font-size:32px; color: rgba(255,255,255,0.6); margin-bottom:6px; font-weight:700; }
+.cal-num { font-size:36px; font-weight:900; color:#fff; }
 .cal-cell:hover { transform: translateY(-6px); }
-.cal-active { outline: 2px solid rgba(255,199,85,0.15); box-shadow: 0 18px 48px rgba(0,0,0,0.7); transform: translateY(-8px); }
+
+.cal-active {
+  outline: 4px solid rgba(255,199,85,0.45) !important;
+  box-shadow:
+    0 0 18px rgba(255,199,85,0.45),
+    0 0 32px rgba(255,199,85,0.20),
+    0 10px 32px rgba(0,0,0,0.8);
+  transform: translateY(-10px) scale(1.10) !important;
+  background: rgba(255,199,85,0.10) !important;
+}
 
 /* panel */
 .panel { margin-top: 8px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius:18px; padding:12px; box-shadow: 0 18px 40px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.02); }
@@ -90,18 +162,18 @@ html,body,#root { height: 100%; }
 .icon.del {font-size: 43px; color:#ffb3b3; }
 
 /* empty */
-.empty-large { padding:28px; color: rgba(255,255,255,0.5); font-weight:700; text-align:left; }
+.empty-large {font-size: 22px; padding:28px; color: rgba(255,255,255,0.5); font-weight:700; text-align:left; }
 
 /* modal */
 .modal-back { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background: linear-gradient(180deg, rgba(0,0,0,0.6), rgba(0,0,0,0.7)); z-index:9999; }
-.modal-card { width:92%;  background: linear-gradient(180deg, rgba(8,8,10,0.95), rgba(6,6,8,0.96)); padding:18px; border-radius:14px; box-shadow: 0 24px 60px rgba(0,0,0,0.8); border:1px solid rgba(255,255,255,0.02); animation: modalPop 220ms cubic-bezier(.2,.9,.3,1); }
+.modal-card { width:92%;  background: linear-gradient(90deg,#066468,#7adbea); padding:18px; border-radius:14px; box-shadow: 0 24px 60px rgba(0,0,0,0.8); border:1px solid rgba(255,255,255,0.02); animation: modalPop 220ms cubic-bezier(.2,.9,.3,1); }
 @keyframes modalPop { from { transform: translateY(10px) scale(0.98); opacity:0 } to { transform: translateY(0) scale(1); opacity:1 } }
 .modal-card h3 {font-size: 43px; color:#fff; margin-bottom:10px; font-weight:800; }
-.input {font-size: 43px; width:100%; padding:12px 14px; border-radius:10px; border:1px solid rgba(255,255,255,0.04); background: rgba(255,255,255,0.02); color:#fff; margin-bottom:10px; }
+.input {font-size: 43px; width:100%; padding:12px 14px; border-radius:10px; border:1px solid #b1a60f0a; background: rgba(255,255,255,0.02); color:#fff; margin-bottom:10px; }
 .row { display:flex; gap:8px; }
 .input.date { max-width:45%; }
 .modal-actions { display:flex; gap:8px; justify-content:flex-end; margin-top:8px; }
-.btn-primary {font-size: 33px; background: linear-gradient(90deg,#6b46c1,#9f7aea); color:#fff; border:none; padding:10px 14px; border-radius:10px; font-weight:800; }
+.btn-primary {font-size: 33px; background: linear-gradient(90deg,#7adbea, #066468); color:#fff; border:none; padding:10px 14px; border-radius:10px; font-weight:800; }
 .btn-ghost { background: transparent; border:1px solid rgba(255,255,255,0.04); color:#fff; padding:10px 12px; border-radius:10px; }
 
 /* bottom nav */
