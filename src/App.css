@@ -1,11 +1,4 @@
-/* =========================================================
-   RESET
-========================================================= */
-html, body {
-  width: 100%;
-  overflow-x: hidden;
-}
-
+/* ================= RESET ================= */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -17,20 +10,20 @@ html, body, #root {
   min-height: 100%;
 }
 
-/* =========================================================
-   ROOT
-========================================================= */
+body {
+  background: #050505;
+}
+
+/* ================= ROOT ================= */
 .boston-root {
-  font-family: Inter, system-ui, -apple-system, Roboto, Arial;
+  font-family: Inter, system-ui, Roboto, Arial;
   background: linear-gradient(180deg,#0b0b0d,#050505);
   color: #f2f2f2;
   min-height: 100svh;
-  padding-bottom: calc(90px + env(safe-area-inset-bottom));
+  padding-bottom: 96px;
 }
 
-/* =========================================================
-   HEADER
-========================================================= */
+/* ================= HEADER ================= */
 .b-header {
   display: grid;
   grid-template-columns: 44px 1fr 44px;
@@ -40,8 +33,6 @@ html, body, #root {
 }
 
 .menu-btn {
-  width: 40px;
-  height: 40px;
   background: none;
   border: none;
   color: white;
@@ -49,10 +40,7 @@ html, body, #root {
 }
 
 .header-center {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
+  text-align: center;
 }
 
 .app-title {
@@ -62,41 +50,31 @@ html, body, #root {
 
 .month-nav {
   display: flex;
-  align-items: center;
+  justify-content: center;
   gap: 10px;
 }
 
 .month-label {
-  font-size: 16px;
   font-weight: 700;
-  text-transform: capitalize;
+  font-size: 16px;
 }
 
-/* =========================================================
-   MAIN
-========================================================= */
-.b-main {
-  padding: 12px;
-}
-
-/* =========================================================
-   CALENDAR
-========================================================= */
+/* ================= CALENDAR ================= */
 .cal-row {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(7,1fr);
   gap: 8px;
-  margin-bottom: 8px;
+  padding: 8px 12px;
 }
 
 .cal-cell {
   aspect-ratio: 1/1;
-  border-radius: 14px;
   background: rgba(255,255,255,.04);
+  border-radius: 14px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 }
 
 .cal-week {
@@ -110,64 +88,17 @@ html, body, #root {
 }
 
 .cal-active {
-  outline: 3px solid rgba(255,199,85,.5);
+  outline: 3px solid rgba(255,199,85,.6);
 }
 
-/* =========================================================
-   PANEL / TASKS
-========================================================= */
+/* ================= PANEL ================= */
 .panel {
   background: rgba(255,255,255,.04);
   border-radius: 18px;
   padding: 14px;
+  margin: 12px;
 }
 
-.panel-head {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
-.panel-title {
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.panel-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.filters {
-  display: flex;
-  gap: 6px;
-}
-
-.small-pill {
-  padding: 6px 12px;
-  border-radius: 999px;
-  font-size: 12px;
-  background: rgba(255,255,255,.12);
-  border: none;
-  color: white;
-}
-
-.small-pill.active {
-  background: #6b46c1;
-}
-
-.btn-new {
-  padding: 6px 14px;
-  border-radius: 10px;
-  background: #6b46c1;
-  border: none;
-  color: white;
-  font-weight: 600;
-}
-
-/* ===== CARD ===== */
 .task-item {
   display: flex;
   justify-content: space-between;
@@ -179,9 +110,6 @@ html, body, #root {
 }
 
 .task-left {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
   flex: 1;
 }
 
@@ -200,13 +128,13 @@ html, body, #root {
   gap: 8px;
 }
 
-/* ===== CORES ===== */
-.border-blue    { border-left: 14px solid #3b82f6; }
-.border-orange  { border-left: 14px solid #fb923c; }
-.border-red     { border-left: 14px solid #ef4444; }
-.border-green   { border-left: 14px solid #22c55e; }
+/* ================= CORES ================= */
+.border-blue   { border-left: 14px solid #3b82f6; }
+.border-orange { border-left: 14px solid #fb923c; }
+.border-red    { border-left: 14px solid #ef4444; }
+.border-green  { border-left: 14px solid #22c55e; }
 
-/* ===== ICONES ===== */
+/* ================= ICONES ================= */
 .icon {
   width: 32px;
   height: 32px;
@@ -217,14 +145,63 @@ html, body, #root {
   font-size: 16px;
 }
 
-/* =========================================================
-   BOTTOM NAV + FAB
-========================================================= */
+/* ================= MODAL ================= */
+.modal-back {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.7);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 480px;
+  background: #0b0b0d;
+  border-radius: 20px 20px 0 0;
+  padding: 16px;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.input, select {
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(255,255,255,.1);
+  color: white;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.btn-primary {
+  background: #6b46c1;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 10px;
+}
+
+/* ================= NAV + FAB ================= */
 .bottom-nav {
   position: fixed;
   left: 12px;
   right: 12px;
-  bottom: calc(12px + env(safe-area-inset-bottom));
+  bottom: 12px;
   height: 64px;
   border-radius: 18px;
   background: rgba(255,255,255,.08);
@@ -233,14 +210,10 @@ html, body, #root {
   align-items: center;
 }
 
-.nav-active {
-  font-weight: 700;
-}
-
 .fab-mobile {
   position: fixed;
   right: 20px;
-  bottom: calc(84px + env(safe-area-inset-bottom));
+  bottom: 88px;
   width: 64px;
   height: 64px;
   border-radius: 50%;
