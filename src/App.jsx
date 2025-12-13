@@ -228,6 +228,15 @@ export default function App() {
           >
             <h3 className="modal-title">Nova tarefa</h3>
 
+             <div className="modal-actions">
+                <button className="btn-ghost" onClick={cancelAdd}>
+                    Cancelar
+                </button>
+                <button className="btn-primary" onClick={saveTask}>
+                   Salvar
+                </button>
+            </div>
+
             <input
               className="input"
               placeholder="Digite a tarefa"
@@ -240,14 +249,7 @@ export default function App() {
               }}
             />
 
-            <div className="modal-actions">
-              <button className="btn-ghost" onClick={cancelAdd}>
-                Cancelar
-              </button>
-              <button className="btn-primary" onClick={saveTask}>
-                Salvar
-              </button>
-            </div>
+           
           </div>
         </div>
       )}
