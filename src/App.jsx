@@ -29,7 +29,7 @@ export default function App() {
     }
   });
 
-  /* MODAL */
+  /* MODAL NOVA TAREFA */
   const [showModal, setShowModal] = useState(false);
   const [formTitle, setFormTitle] = useState("");
   const [formColor, setFormColor] = useState("blue");
@@ -58,7 +58,7 @@ export default function App() {
     return "border-blue";
   }
 
-  /* ================= TASKS ================= */
+  /* ================= TASK LIST ================= */
   function tasksForAgenda() {
     if (selectedDate !== today) return tasksMap[selectedDate] || [];
 
@@ -97,18 +97,23 @@ export default function App() {
       color: formColor,
     };
 
-    setTasksMap((p) => ({
-      ...p,
-      [selectedDate]: [t, ...(p[selectedDate] || [])],
+    setTasksMap((prev) => ({
+      ...prev,
+      [selectedDate]: [t, ...(prev[selectedDate] || [])],
     }));
 
     setShowModal(false);
   }
 
+  function cancelTask() {
+    setShowModal(false);
+    setFormTitle("");
+  }
+
   function toggleTask(t) {
-    setTasksMap((p) => ({
-      ...p,
-      [t.date]: p[t.date].map((x) =>
+    setTasksMap((prev) => ({
+      ...prev,
+      [t.date]: prev[t.date].map((x) =>
         x.id === t.id ? { ...x, done: !x.done } : x
       ),
     }));
@@ -116,9 +121,10 @@ export default function App() {
 
   function deleteTask(t) {
     if (!confirm("Excluir tarefa?")) return;
-    setTasksMap((p) => ({
-      ...p,
-      [t.date]: p[t.date].filter((x) => x.id !== t.id),
+
+    setTasksMap((prev) => ({
+      ...prev,
+      [t.date]: prev[t.date].filter((x) => x.id !== t.id),
     }));
   }
 
@@ -224,7 +230,7 @@ export default function App() {
         <div onClick={() => setActiveTab("mais")}>Mais</div>
       </nav>
 
-      {/* BOTÃO NOVA TAREFA */}
+      {/* BOTÃO + */}
       {activeTab === "agenda" && (
         <button className="fab-mobile" onClick={openAddTask}>
           +
@@ -233,16 +239,17 @@ export default function App() {
 
       {/* MODAL NOVA TAREFA */}
       {showModal && (
-        <div className="modal-back" onClick={() => setShowModal(false)}>
+        <div className="modal-back" onClick={cancelTask}>
           <div className="modal-card" onClick={(e) => e.stopPropagation()}>
             <h3 className="modal-title">Nova tarefa</h3>
 
             <div className="modal-form">
               <input
                 className="input"
-                placeholder="Título da tarefa"
+                placeholder="Digite a tarefa"
                 value={formTitle}
                 onChange={(e) => setFormTitle(e.target.value)}
+                autoFocus
               />
 
               <select
@@ -257,6 +264,9 @@ export default function App() {
             </div>
 
             <div className="modal-actions">
+              <button className="btn-ghost" onClick={cancelTask}>
+                Cancelar
+              </button>
               <button className="btn-primary" onClick={saveTask}>
                 Salvar
               </button>
