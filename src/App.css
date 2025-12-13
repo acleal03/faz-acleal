@@ -1,5 +1,10 @@
 /* App.css - Boston-5.0 Mobile First */
 
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
 /* reset minimal */
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html,body,#root { height: 100%; }
@@ -96,8 +101,16 @@ html,body,#root { height: 100%; }
 .b-main { padding: 14px 12px 80px; display:block; }
 
 /* calendar */
-.calendar-wrap { margin-top: 8px; margin-bottom: 18px; }
-.cal-row { display:flex; gap:10px; justify-content:flex-start; overflow-x:auto; padding-bottom:6px; -webkit-overflow-scrolling: touch; }
+.calendar-wrap {width: 100%; max-width: 100vw; overflow: hidden; margin-top: 8px; margin-bottom: 18px; }
+
+.cal-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+}
+
 .cal-cell {
   min-width:94px; max-width:94px; width:94px;
   background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
@@ -107,6 +120,8 @@ html,body,#root { height: 100%; }
   border:1px solid rgba(255,255,255,0.02);
   box-shadow: 0 10px 30px rgba(3,6,12,0.65);
   transition: transform 220ms cubic-bezier(.2,.9,.3,1), box-shadow 220ms;
+  box-sizing: border-box;
+  flex-shrink: 0;
 }
 .cal-cell + .cal-cell { margin-left:25px; }
 .cal-week { font-size:32px; color: rgba(255,255,255,0.6); margin-bottom:6px; font-weight:700; }
@@ -210,10 +225,21 @@ html,body,#root { height: 100%; }
 @media(min-width: 980px) {
   .boston-root { background: linear-gradient(180deg,#f6f7fb,#eef2ff); color:#0b1a3b; }
   .b-header { background: transparent; padding:22px 40px; }
-  .app-title { color: var(--titleColor, #0b1a3b); }
+  .app-title {font-size: 36; color: var(--titleColor, #0b1a3b); }
   .cal-row { justify-content:center; }
   .cal-cell { min-width:96px; max-width:96px; width:96px; border-radius:16px; }
   .panel { margin: 24px auto; max-width: 980px; }
   .bottom-nav { left: 40px; right: 40px; bottom: 22px; }
   .fab-mobile { right: 48px; bottom: 120px; }
+  .month-label {
+      font-size: 28px;
+    }
+
+    .panel-title {
+      font-size: 38px;
+    }
+
+    .task-title {
+      font-size: 38px;
+    }
 }
