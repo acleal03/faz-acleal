@@ -98,8 +98,9 @@ export default function App() {
 
                 <button
                   className={`small-pill ${filter==="today"?"active":""}`}
-                  onClick={()=>setFilter("today")}
-                >Hoje</button>
+                  onClick={()=>setFilter("today")}>
+
+                </button>
 
                 <button
                   className={`small-pill ${filter==="late"?"active":""}`}
