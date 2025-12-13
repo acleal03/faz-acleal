@@ -1,5 +1,5 @@
 /* =========================================================
-   RESET / BASE
+   RESET
 ========================================================= */
 html, body {
   width: 100%;
@@ -10,7 +10,6 @@ html, body {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  -webkit-tap-highlight-color: transparent;
   -webkit-text-size-adjust: 100%;
 }
 
@@ -23,11 +22,10 @@ html, body, #root {
 ========================================================= */
 .boston-root {
   font-family: Inter, system-ui, -apple-system, Roboto, Arial;
-  background: linear-gradient(180deg,#0b0b0d 0%, #070708 30%, #050505 100%);
+  background: linear-gradient(180deg,#0b0b0d,#050505);
   color: #f2f2f2;
-
   min-height: 100svh;
-  padding-bottom: calc(88px + env(safe-area-inset-bottom));
+  padding-bottom: calc(90px + env(safe-area-inset-bottom));
 }
 
 /* =========================================================
@@ -38,7 +36,7 @@ html, body, #root {
   grid-template-columns: 44px 1fr 44px;
   align-items: center;
   padding: 12px 14px;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255,255,255,.06);
 }
 
 .menu-btn {
@@ -48,9 +46,6 @@ html, body, #root {
   border: none;
   color: white;
   font-size: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .header-center {
@@ -61,7 +56,7 @@ html, body, #root {
 }
 
 .app-title {
-  font-size: clamp(18px, 5vw, 22px);
+  font-size: 20px;
   font-weight: 800;
 }
 
@@ -72,7 +67,7 @@ html, body, #root {
 }
 
 .month-label {
-  font-size: clamp(14px, 4vw, 18px);
+  font-size: 16px;
   font-weight: 700;
   text-transform: capitalize;
 }
@@ -87,10 +82,6 @@ html, body, #root {
 /* =========================================================
    CALENDAR
 ========================================================= */
-.calendar-wrap {
-  margin: 12px 0;
-}
-
 .cal-row {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -99,10 +90,9 @@ html, body, #root {
 }
 
 .cal-cell {
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 1/1;
   border-radius: 14px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.05);
+  background: rgba(255,255,255,.04);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -127,7 +117,7 @@ html, body, #root {
    PANEL / TASKS
 ========================================================= */
 .panel {
-  background: rgba(255,255,255,0.03);
+  background: rgba(255,255,255,.04);
   border-radius: 18px;
   padding: 14px;
 }
@@ -159,9 +149,9 @@ html, body, #root {
   padding: 6px 12px;
   border-radius: 999px;
   font-size: 12px;
-  background: rgba(255,255,255,0.1);
-  color: white;
+  background: rgba(255,255,255,.12);
   border: none;
+  color: white;
 }
 
 .small-pill.active {
@@ -172,16 +162,17 @@ html, body, #root {
   padding: 6px 14px;
   border-radius: 10px;
   background: #6b46c1;
-  color: white;
   border: none;
+  color: white;
   font-weight: 600;
 }
 
+/* ===== CARD ===== */
 .task-item {
   display: flex;
   justify-content: space-between;
   gap: 10px;
-  background: rgba(255,255,255,0.04);
+  background: rgba(255,255,255,.05);
   border-radius: 14px;
   padding: 12px;
   margin-bottom: 10px;
@@ -209,89 +200,25 @@ html, body, #root {
   gap: 8px;
 }
 
+/* ===== CORES ===== */
+.border-blue    { border-left: 14px solid #3b82f6; }
+.border-orange  { border-left: 14px solid #fb923c; }
+.border-red     { border-left: 14px solid #ef4444; }
+.border-green   { border-left: 14px solid #22c55e; }
+
+/* ===== ICONES ===== */
 .icon {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.1);
+  background: rgba(255,255,255,.12);
   border: none;
   color: white;
-}
-
-.task-done .task-title {
-  text-decoration: line-through;
-  opacity: .6;
-}
-
-.empty-large {
-  text-align: center;
-  opacity: .6;
-  padding: 20px;
+  font-size: 16px;
 }
 
 /* =========================================================
-   MODAL
-========================================================= */
-.modal-back {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.7);
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  z-index: 50;
-}
-
-.modal-card {
-  width: 100%;
-  max-width: 480px;
-  background: #0b0b0d;
-  border-radius: 20px 20px 0 0;
-  padding: 16px;
-}
-
-.modal-title {
-  font-size: 18px;
-  font-weight: 800;
-  margin-bottom: 10px;
-}
-
-.modal-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.input {
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
-  background: rgba(255,255,255,0.1);
-  color: white;
-}
-
-.row {
-  display: flex;
-  gap: 10px;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  margin-bottom: 10px;
-}
-
-.btn-primary {
-  padding: 8px 14px;
-  border-radius: 10px;
-  background: #6b46c1;
-  border: none;
-  color: white;
-}
-
-/* =========================================================
-   BOTTOM NAV
+   BOTTOM NAV + FAB
 ========================================================= */
 .bottom-nav {
   position: fixed;
@@ -300,25 +227,16 @@ html, body, #root {
   bottom: calc(12px + env(safe-area-inset-bottom));
   height: 64px;
   border-radius: 18px;
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(10px);
+  background: rgba(255,255,255,.08);
   display: flex;
   justify-content: space-around;
   align-items: center;
 }
 
-.nav-btn {
-  opacity: .6;
-}
-
 .nav-active {
-  opacity: 1;
   font-weight: 700;
 }
 
-/* =========================================================
-   FAB
-========================================================= */
 .fab-mobile {
   position: fixed;
   right: 20px;
