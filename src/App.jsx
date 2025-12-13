@@ -86,7 +86,7 @@ export default function App() {
         <div className="panel">
           <div className="panel-head">
             <div className="panel-title">
-              {selectedDate === today ? "Hoje" : selectedDate}
+              {selectedDate === today ? "" : selectedDate}
             </div>
 
             {selectedDate === today && (
@@ -98,9 +98,8 @@ export default function App() {
 
                 <button
                   className={`small-pill ${filter==="today"?"active":""}`}
-                  onClick={()=>setFilter("today")}>
-
-                </button>
+                  onClick={()=>setFilter("today")}
+                >Hoje</button>
 
                 <button
                   className={`small-pill ${filter==="late"?"active":""}`}

@@ -10,10 +10,6 @@ html, body, #root {
   min-height: 100%;
 }
 
-body {
-  background: #050505;
-}
-
 /* ================= ROOT ================= */
 .boston-root {
   font-family: Inter, system-ui, Roboto, Arial;
@@ -99,6 +95,39 @@ body {
   margin: 12px;
 }
 
+/* === CABEÇALHO DO PAINEL (TÍTULO + FILTROS) === */
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.panel-title {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+/* ================= FILTROS ================= */
+.filters {
+  display: flex;
+  gap: 10px;
+}
+
+.small-pill {
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 18px; /* 🔥 1.5x maior */
+  background: rgba(255,255,255,.12);
+  border: none;
+  color: white;
+}
+
+.small-pill.active {
+  background: #6b46c1;
+}
+
+/* ================= TASKS ================= */
 .task-item {
   display: flex;
   justify-content: space-between;
@@ -145,57 +174,6 @@ body {
   font-size: 16px;
 }
 
-/* ================= MODAL ================= */
-.modal-back {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.7);
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-}
-
-.modal-card {
-  width: 100%;
-  max-width: 480px;
-  background: #0b0b0d;
-  border-radius: 20px 20px 0 0;
-  padding: 16px;
-}
-
-.modal-title {
-  font-size: 18px;
-  font-weight: 800;
-}
-
-.modal-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.input, select {
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
-  background: rgba(255,255,255,.1);
-  color: white;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
-.btn-primary {
-  background: #6b46c1;
-  color: white;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 10px;
-}
-
 /* ================= NAV + FAB ================= */
 .bottom-nav {
   position: fixed;
@@ -208,6 +186,10 @@ body {
   display: flex;
   justify-content: space-around;
   align-items: center;
+}
+
+.nav-active {
+  font-weight: 800;
 }
 
 .fab-mobile {
