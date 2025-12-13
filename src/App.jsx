@@ -15,7 +15,7 @@ export default function App() {
 
   /* ================= STATE ================= */
   const [activeTab, setActiveTab] = useState("agenda");
-  const [filter, setFilter] = useState("all"); // all | today | late
+  const [filter, setFilter] = useState("all");
 
   const [viewYear, setViewYear] = useState(new Date().getFullYear());
   const [viewMonth, setViewMonth] = useState(new Date().getMonth());
@@ -29,10 +29,9 @@ export default function App() {
     }
   });
 
-  /* MODAL NOVA TAREFA */
-  const [showModal, setShowModal] = useState(false);
-  const [formTitle, setFormTitle] = useState("");
-  const [formColor, setFormColor] = useState("blue");
+  /* MODAL NOVA TAREFA (SIMPLES) */
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [taskText, setTaskText] = useState("");
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(tasksMap));
@@ -80,21 +79,20 @@ export default function App() {
 
   /* ================= CRUD ================= */
   function openAddTask() {
-    setFormTitle("");
-    setFormColor("blue");
-    setShowModal(true);
+    setTaskText("");
+    setShowAddModal(true);
   }
 
   function saveTask() {
-    if (!formTitle.trim()) return;
+    if (!taskText.trim()) return;
 
     const t = {
       id: uid(),
-      title: formTitle.trim(),
+      title: taskText.trim(),
       date: selectedDate,
       createdAt: localISODateTime(),
       done: false,
-      color: formColor,
+      color: "blue",
     };
 
     setTasksMap((prev) => ({
@@ -102,12 +100,12 @@ export default function App() {
       [selectedDate]: [t, ...(prev[selectedDate] || [])],
     }));
 
-    setShowModal(false);
+    setShowAddModal(false);
   }
 
-  function cancelTask() {
-    setShowModal(false);
-    setFormTitle("");
+  function cancelAdd() {
+    setShowAddModal(false);
+    setTaskText("");
   }
 
   function toggleTask(t) {
@@ -128,12 +126,12 @@ export default function App() {
     }));
   }
 
-  /* ================= RENDER AGENDA ================= */
-  function renderAgenda() {
-    const finalList = applyFilter(tasksForAgenda());
+  /* ================= RENDER ================= */
+  const finalList = applyFilter(tasksForAgenda());
 
-    return (
-      <>
+  return (
+    <div className="boston-root">
+      <main className="b-main">
         {[row1, row2, row3, row4, row5].map((row, i) => (
           <div className="cal-row" key={i}>
             {row.map((d) => (
@@ -206,65 +204,44 @@ export default function App() {
             </div>
           ))}
         </div>
-      </>
-    );
-  }
-
-  /* ================= MAIN ================= */
-  return (
-    <div className="boston-root">
-      <main className="b-main">
-        {activeTab === "agenda" && renderAgenda()}
       </main>
 
-      {/* MENU INFERIOR */}
+      {/* MENU */}
       <nav className="bottom-nav">
-        <div
-          className={activeTab === "agenda" ? "nav-active" : ""}
-          onClick={() => setActiveTab("agenda")}
-        >
-          Agenda
-        </div>
-        <div onClick={() => setActiveTab("notas")}>Notas</div>
-        <div onClick={() => setActiveTab("alertas")}>Alertas</div>
-        <div onClick={() => setActiveTab("mais")}>Mais</div>
+        <div className="nav-active">Agenda</div>
+        <div>Notas</div>
+        <div>Alertas</div>
+        <div>Mais</div>
       </nav>
 
       {/* BOTÃO + */}
-      {activeTab === "agenda" && (
-        <button className="fab-mobile" onClick={openAddTask}>
-          +
-        </button>
-      )}
+      <button className="fab-mobile" onClick={openAddTask}>
+        +
+      </button>
 
-      {/* MODAL NOVA TAREFA */}
-      {showModal && (
-        <div className="modal-back" onClick={cancelTask}>
-          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+      {/* 🔥 MODAL SIMPLES (IGUAL AO DA LIXEIRA) */}
+      {showAddModal && (
+        <div className="modal-back" onClick={cancelAdd}>
+          <div
+            className="modal-card"
+            onClick={(e) => e.stopPropagation()}
+          >
             <h3 className="modal-title">Nova tarefa</h3>
 
-            <div className="modal-form">
-              <input
-                className="input"
-                placeholder="Digite a tarefa"
-                value={formTitle}
-                onChange={(e) => setFormTitle(e.target.value)}
-                autoFocus
-              />
-
-              <select
-                value={formColor}
-                onChange={(e) => setFormColor(e.target.value)}
-              >
-                <option value="blue">Azul</option>
-                <option value="orange">Laranja</option>
-                <option value="red">Vermelho</option>
-                <option value="green">Verde</option>
-              </select>
-            </div>
+            <input
+              className="input"
+              placeholder="Digite a tarefa"
+              value={taskText}
+              onChange={(e) => setTaskText(e.target.value)}
+              autoFocus
+              onKeyDown={(e) => {
+                if (e.key === "Enter") saveTask();
+                if (e.key === "Escape") cancelAdd();
+              }}
+            />
 
             <div className="modal-actions">
-              <button className="btn-ghost" onClick={cancelTask}>
+              <button className="btn-ghost" onClick={cancelAdd}>
                 Cancelar
               </button>
               <button className="btn-primary" onClick={saveTask}>
