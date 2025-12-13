@@ -13,7 +13,6 @@ const STORAGE_KEY = "faz_acleal_boston_v3";
 export default function App() {
   const today = todayISO();
 
-  const [filter, setFilter] = useState("all");
   const [viewYear, setViewYear] = useState(new Date().getFullYear());
   const [viewMonth, setViewMonth] = useState(new Date().getMonth());
   const [selectedDate, setSelectedDate] = useState(today);
@@ -22,40 +21,51 @@ export default function App() {
     JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}
   );
 
-  const [showModal, setShowModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
   const [taskText, setTaskText] = useState("");
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(tasksMap));
   }, [tasksMap]);
 
-  const monthDays = generateMonthDays(viewYear, viewMonth);
-  const [row1, row2, row3, row4, row5] = splitThreeRows(monthDays);
+  const days = generateMonthDays(viewYear, viewMonth);
+  const [r1,r2,r3,r4,r5] = splitThreeRows(days);
 
   function prevMonth() {
-    if (viewMonth === 0) {
-      setViewYear(y => y - 1);
-      setViewMonth(11);
-    } else {
-      setViewMonth(m => m - 1);
-    }
+    setViewMonth(m => (m === 0 ? 11 : m - 1));
+    if (viewMonth === 0) setViewYear(y => y - 1);
   }
 
   function nextMonth() {
-    if (viewMonth === 11) {
-      setViewYear(y => y + 1);
-      setViewMonth(0);
-    } else {
-      setViewMonth(m => m + 1);
-    }
+    setViewMonth(m => (m === 11 ? 0 : m + 1));
+    if (viewMonth === 11) setViewYear(y => y + 1);
+  }
+
+  function saveTask() {
+    if (!taskText.trim()) return;
+
+    const t = {
+      id: uid(),
+      title: taskText.trim(),
+      date: selectedDate,
+      createdAt: localISODateTime(),
+      done: false,
+    };
+
+    setTasksMap(p => ({
+      ...p,
+      [selectedDate]: [t, ...(p[selectedDate] || [])],
+    }));
+
+    setShowAddModal(false);
+    setTaskText("");
   }
 
   return (
     <div className="boston-root">
-      {/* 🔥 HEADER CENTRALIZADO */}
+      {/* HEADER */}
       <header className="b-header">
         <div className="app-title">faz@acleal</div>
-
         <div className="month-nav">
           <button className="menu-btn" onClick={prevMonth}>←</button>
           <div className="month-label">
@@ -68,21 +78,55 @@ export default function App() {
         </div>
       </header>
 
-      <main>
-        {[row1,row2,row3,row4,row5].map((row,i)=>(
-          <div className="cal-row" key={i}>
-            {row.map(d=>(
-              <div
-                key={d.date}
-                className={`cal-cell ${d.date===selectedDate?"cal-active":""}`}
-                onClick={()=>setSelectedDate(d.date)}
-              >
-                {d.day}
-              </div>
-            ))}
+      {/* CALENDÁRIO */}
+      {[r1,r2,r3,r4,r5].map((row,i)=>(
+        <div className="cal-row" key={i}>
+          {row.map(d=>(
+            <div
+              key={d.date}
+              className={`cal-cell ${d.date===selectedDate?"cal-active":""}`}
+              onClick={()=>setSelectedDate(d.date)}
+            >
+              {d.day}
+            </div>
+          ))}
+        </div>
+      ))}
+
+      {/* BOTÃO + */}
+      <button className="fab-mobile" onClick={()=>setShowAddModal(true)}>
+        +
+      </button>
+
+      {/* 🔥 MODAL NO TOPO (NÃO ATRAPALHA TECLADO) */}
+      {showAddModal && (
+        <div className="modal-back" onClick={()=>setShowAddModal(false)}>
+          <div className="modal-card" onClick={e=>e.stopPropagation()}>
+            <div className="modal-title">Nova tarefa</div>
+
+            <input
+              className="input"
+              placeholder="Digite a tarefa"
+              value={taskText}
+              onChange={e=>setTaskText(e.target.value)}
+              autoFocus
+              onKeyDown={e=>{
+                if (e.key==="Enter") saveTask();
+                if (e.key==="Escape") setShowAddModal(false);
+              }}
+            />
+
+            <div className="modal-actions">
+              <button className="btn-ghost" onClick={()=>setShowAddModal(false)}>
+                Cancelar
+              </button>
+              <button className="btn-primary" onClick={saveTask}>
+                Salvar
+              </button>
+            </div>
           </div>
-        ))}
-      </main>
+        </div>
+      )}
     </div>
   );
 }
