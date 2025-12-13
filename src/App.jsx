@@ -92,7 +92,6 @@ export default function App() {
       date: selectedDate,
       createdAt: localISODateTime(),
       done: false,
-      color: "blue",
     };
 
     setTasksMap((prev) => ({
@@ -101,11 +100,6 @@ export default function App() {
     }));
 
     setShowAddModal(false);
-  }
-
-  function cancelAdd() {
-    setShowAddModal(false);
-    setTaskText("");
   }
 
   function toggleTask(t) {
@@ -119,11 +113,31 @@ export default function App() {
 
   function deleteTask(t) {
     if (!confirm("Excluir tarefa?")) return;
-
     setTasksMap((prev) => ({
       ...prev,
       [t.date]: prev[t.date].filter((x) => x.id !== t.id),
     }));
+  }
+
+  /* ================= HEADER ================= */
+  function prevMonth() {
+    setViewMonth((m) => {
+      if (m === 0) {
+        setViewYear((y) => y - 1);
+        return 11;
+      }
+      return m - 1;
+    });
+  }
+
+  function nextMonth() {
+    setViewMonth((m) => {
+      if (m === 11) {
+        setViewYear((y) => y + 1);
+        return 0;
+      }
+      return m + 1;
+    });
   }
 
   /* ================= RENDER ================= */
@@ -131,82 +145,120 @@ export default function App() {
 
   return (
     <div className="boston-root">
+      {/* 🔥 HEADER RESTAURADO */}
+      <header className="b-header">
+        <div></div>
+
+        <div className="header-center">
+          <div className="app-title">faz@acleal</div>
+
+          <div className="month-nav">
+            <button className="menu-btn" onClick={prevMonth}>
+              ←
+            </button>
+
+            <span className="month-label">
+              {new Date(viewYear, viewMonth).toLocaleString("pt-BR", {
+                month: "long",
+                year: "numeric",
+              })}
+            </span>
+
+            <button className="menu-btn" onClick={nextMonth}>
+              →
+            </button>
+          </div>
+        </div>
+
+        <div></div>
+      </header>
+
       <main className="b-main">
-        {[row1, row2, row3, row4, row5].map((row, i) => (
-          <div className="cal-row" key={i}>
-            {row.map((d) => (
-              <div
-                key={d.date}
-                className={`cal-cell ${
-                  d.date === selectedDate ? "cal-active" : ""
-                }`}
-                onClick={() => setSelectedDate(d.date)}
-              >
-                <div className="cal-week">{d.weekday}</div>
-                <div className="cal-num">{d.day}</div>
+        {activeTab === "agenda" && (
+          <>
+            {[row1, row2, row3, row4, row5].map((row, i) => (
+              <div className="cal-row" key={i}>
+                {row.map((d) => (
+                  <div
+                    key={d.date}
+                    className={`cal-cell ${
+                      d.date === selectedDate ? "cal-active" : ""
+                    }`}
+                    onClick={() => setSelectedDate(d.date)}
+                  >
+                    <div className="cal-week">{d.weekday}</div>
+                    <div className="cal-num">{d.day}</div>
+                  </div>
+                ))}
               </div>
             ))}
-          </div>
-        ))}
 
-        <div className="panel">
-          <div className="panel-head">
-            <div className="panel-title">
-              {selectedDate === today ? "Hoje" : selectedDate}
+            <div className="panel">
+              <div className="panel-head">
+                <div className="panel-title">
+                  {selectedDate === today ? "Hoje" : selectedDate}
+                </div>
+
+                {selectedDate === today && (
+                  <div className="filters">
+                    <button
+                      className={`small-pill ${
+                        filter === "all" ? "active" : ""
+                      }`}
+                      onClick={() => setFilter("all")}
+                    >
+                      Todas
+                    </button>
+                    <button
+                      className={`small-pill ${
+                        filter === "today" ? "active" : ""
+                      }`}
+                      onClick={() => setFilter("today")}
+                    >
+                      Hoje
+                    </button>
+                    <button
+                      className={`small-pill ${
+                        filter === "late" ? "active" : ""
+                      }`}
+                      onClick={() => setFilter("late")}
+                    >
+                      Atrasadas
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {finalList.length === 0 && (
+                <div className="empty-large">Nenhuma tarefa.</div>
+              )}
+
+              {finalList.map((t) => (
+                <div key={t.id} className={`task-item ${borderClass(t)}`}>
+                  <div className="task-left">
+                    <div className="task-title">{t.title}</div>
+                    <div className="task-meta">Dia: {t.date}</div>
+                  </div>
+
+                  <div className="task-right">
+                    <input
+                      type="checkbox"
+                      checked={t.done}
+                      onChange={() => toggleTask(t)}
+                    />
+                    <button className="icon">✏️</button>
+                    <button className="icon" onClick={() => deleteTask(t)}>
+                      🗑️
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
-
-            {selectedDate === today && (
-              <div className="filters">
-                <button
-                  className={`small-pill ${filter === "all" ? "active" : ""}`}
-                  onClick={() => setFilter("all")}
-                >
-                  Todas
-                </button>
-                <button
-                  className={`small-pill ${filter === "today" ? "active" : ""}`}
-                  onClick={() => setFilter("today")}
-                >
-                  Hoje
-                </button>
-                <button
-                  className={`small-pill ${filter === "late" ? "active" : ""}`}
-                  onClick={() => setFilter("late")}
-                >
-                  Atrasadas
-                </button>
-              </div>
-            )}
-          </div>
-
-          {finalList.length === 0 && (
-            <div className="empty-large">Nenhuma tarefa.</div>
-          )}
-
-          {finalList.map((t) => (
-            <div key={t.id} className={`task-item ${borderClass(t)}`}>
-              <div className="task-left">
-                <div className="task-title">{t.title}</div>
-                <div className="task-meta">Dia: {t.date}</div>
-              </div>
-
-              <div className="task-right">
-                <input
-                  type="checkbox"
-                  checked={t.done}
-                  onChange={() => toggleTask(t)}
-                />
-                <button className="icon">✏️</button>
-                <button className="icon" onClick={() => deleteTask(t)}>
-                  🗑️
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
+          </>
+        )}
       </main>
 
-      {/* MENU */}
+      {/* MENU INFERIOR */}
       <nav className="bottom-nav">
         <div className="nav-active">Agenda</div>
         <div>Notas</div>
@@ -219,23 +271,11 @@ export default function App() {
         +
       </button>
 
-      {/* 🔥 MODAL SIMPLES (IGUAL AO DA LIXEIRA) */}
+      {/* MODAL SIMPLES NOVA TAREFA */}
       {showAddModal && (
-        <div className="modal-back" onClick={cancelAdd}>
-          <div
-            className="modal-card"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h3 className="modal-title">Nova tarefa</h3>
-
-             <div className="modal-actions">
-                <button className="btn-ghost" onClick={cancelAdd}>
-                    Cancelar
-                </button>
-                <button className="btn-primary" onClick={saveTask}>
-                   Salvar
-                </button>
-            </div>
+        <div className="modal-back" onClick={() => setShowAddModal(false)}>
+          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-title">Nova tarefa</div>
 
             <input
               className="input"
@@ -245,11 +285,18 @@ export default function App() {
               autoFocus
               onKeyDown={(e) => {
                 if (e.key === "Enter") saveTask();
-                if (e.key === "Escape") cancelAdd();
+                if (e.key === "Escape") setShowAddModal(false);
               }}
             />
 
-           
+            <div className="modal-actions">
+              <button className="btn-ghost" onClick={() => setShowAddModal(false)}>
+                Cancelar
+              </button>
+              <button className="btn-primary" onClick={saveTask}>
+                Salvar
+              </button>
+            </div>
           </div>
         </div>
       )}
