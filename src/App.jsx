@@ -13,8 +13,9 @@ const STORAGE_KEY = "faz_acleal_boston_v3";
 export default function App() {
   const today = todayISO();
 
+  /* ================= STATE ================= */
   const [activeTab, setActiveTab] = useState("agenda");
-  const [filter, setFilter] = useState("all");
+  const [filter, setFilter] = useState("all"); // all | today | late
 
   const [viewYear, setViewYear] = useState(new Date().getFullYear());
   const [viewMonth, setViewMonth] = useState(new Date().getMonth());
@@ -28,6 +29,7 @@ export default function App() {
     }
   });
 
+  /* MODAL */
   const [showModal, setShowModal] = useState(false);
   const [formTitle, setFormTitle] = useState("");
   const [formColor, setFormColor] = useState("blue");
@@ -56,6 +58,7 @@ export default function App() {
     return "border-blue";
   }
 
+  /* ================= TASKS ================= */
   function tasksForAgenda() {
     if (selectedDate !== today) return tasksMap[selectedDate] || [];
 
@@ -113,7 +116,6 @@ export default function App() {
 
   function deleteTask(t) {
     if (!confirm("Excluir tarefa?")) return;
-
     setTasksMap((p) => ({
       ...p,
       [t.date]: p[t.date].filter((x) => x.id !== t.id),
@@ -222,14 +224,14 @@ export default function App() {
         <div onClick={() => setActiveTab("mais")}>Mais</div>
       </nav>
 
-      {/* 🔥 BOTÃO NOVA TAREFA (RESTAURADO) */}
+      {/* BOTÃO NOVA TAREFA */}
       {activeTab === "agenda" && (
         <button className="fab-mobile" onClick={openAddTask}>
           +
         </button>
       )}
 
-      {/* MODAL */}
+      {/* MODAL NOVA TAREFA */}
       {showModal && (
         <div className="modal-back" onClick={() => setShowModal(false)}>
           <div className="modal-card" onClick={(e) => e.stopPropagation()}>
@@ -238,7 +240,7 @@ export default function App() {
             <div className="modal-form">
               <input
                 className="input"
-                placeholder="Título"
+                placeholder="Título da tarefa"
                 value={formTitle}
                 onChange={(e) => setFormTitle(e.target.value)}
               />
