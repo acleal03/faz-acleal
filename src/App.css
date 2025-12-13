@@ -3,7 +3,6 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  -webkit-text-size-adjust: 100%;
 }
 
 html, body, #root {
@@ -17,42 +16,6 @@ html, body, #root {
   color: #f2f2f2;
   min-height: 100svh;
   padding-bottom: 96px;
-}
-
-/* ================= HEADER ================= */
-.b-header {
-  display: grid;
-  grid-template-columns: 44px 1fr 44px;
-  align-items: center;
-  padding: 12px 14px;
-  border-bottom: 1px solid rgba(255,255,255,.06);
-}
-
-.menu-btn {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 24px;
-}
-
-.header-center {
-  text-align: center;
-}
-
-.app-title {
-  font-size: 20px;
-  font-weight: 800;
-}
-
-.month-nav {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-}
-
-.month-label {
-  font-weight: 700;
-  font-size: 16px;
 }
 
 /* ================= CALENDAR ================= */
@@ -73,16 +36,6 @@ html, body, #root {
   justify-content: center;
 }
 
-.cal-week {
-  font-size: 12px;
-  opacity: .6;
-}
-
-.cal-num {
-  font-size: 18px;
-  font-weight: 800;
-}
-
 .cal-active {
   outline: 3px solid rgba(255,199,85,.6);
 }
@@ -95,12 +48,10 @@ html, body, #root {
   margin: 12px;
 }
 
-/* === CABEÇALHO DO PAINEL (TÍTULO + FILTROS) === */
 .panel-head {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
+  align-items: center;
 }
 
 .panel-title {
@@ -108,7 +59,7 @@ html, body, #root {
   font-weight: 800;
 }
 
-/* ================= FILTROS ================= */
+/* ================= FILTERS ================= */
 .filters {
   display: flex;
   gap: 10px;
@@ -117,7 +68,7 @@ html, body, #root {
 .small-pill {
   padding: 8px 14px;
   border-radius: 999px;
-  font-size: 18px; /* 🔥 1.5x maior */
+  font-size: 18px;
   background: rgba(255,255,255,.12);
   border: none;
   color: white;
@@ -138,32 +89,19 @@ html, body, #root {
   margin-bottom: 10px;
 }
 
-.task-left {
-  flex: 1;
-}
-
-.task-title {
-  font-weight: 700;
-}
-
-.task-meta {
-  font-size: 12px;
-  opacity: .6;
-}
-
 .task-right {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-/* ================= CORES ================= */
+/* ================= COLORS ================= */
 .border-blue   { border-left: 14px solid #3b82f6; }
 .border-orange { border-left: 14px solid #fb923c; }
 .border-red    { border-left: 14px solid #ef4444; }
 .border-green  { border-left: 14px solid #22c55e; }
 
-/* ================= ICONES ================= */
+/* ================= ICONS ================= */
 .icon {
   width: 32px;
   height: 32px;
@@ -174,7 +112,7 @@ html, body, #root {
   font-size: 16px;
 }
 
-/* ================= NAV + FAB ================= */
+/* ================= NAV ================= */
 .bottom-nav {
   position: fixed;
   left: 12px;
@@ -186,12 +124,10 @@ html, body, #root {
   display: flex;
   justify-content: space-around;
   align-items: center;
+  z-index: 20;
 }
 
-.nav-active {
-  font-weight: 800;
-}
-
+/* ================= FAB ================= */
 .fab-mobile {
   position: fixed;
   right: 20px;
@@ -203,4 +139,60 @@ html, body, #root {
   color: white;
   font-size: 36px;
   border: none;
+  z-index: 30;
+}
+
+/* ================= MODAL SIMPLES ================= */
+.modal-back {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999; /* 🔥 força aparecer */
+}
+
+.modal-card {
+  background: #0b0b0d;
+  padding: 20px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 360px;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(255,255,255,.1);
+  color: white;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.btn-primary {
+  background: #6b46c1;
+  border: none;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 10px;
+}
+
+.btn-ghost {
+  background: transparent;
+  border: none;
+  color: #ccc;
 }
