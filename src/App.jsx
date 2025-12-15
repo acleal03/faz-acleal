@@ -120,21 +120,54 @@ export default function App() {
         +
       </button>
 
-      {/* MODAL */}
+      {/* ================= MODAL NOVA TAREFA ================= */}
       {showAddModal && (
-        <div className="modal-back" onClick={() => setShowAddModal(false)}>
-          <div className="modal-card" onClick={e => e.stopPropagation()}>
-            <input
-              className="input"
-              placeholder="Digite a tarefa"
-              value={taskText}
-              onChange={e => setTaskText(e.target.value)}
-              autoFocus
-            />
-            <button onClick={saveTask}>Salvar</button>
+        <div
+          className="modal-back"
+          onClick={() => setShowAddModal(false)}
+        >
+          <div
+            className="modal-card"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="modal-title">Nova tarefa</div>
+
+            <div className="modal-form">
+              <input
+                className="input"
+                placeholder="Digite a tarefa"
+                value={taskText}
+                onChange={(e) => setTaskText(e.target.value)}
+                autoFocus
+              />
+
+              <input
+                type="date"
+                className="input"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+              />
+            </div>
+
+            <div className="modal-actions">
+              <button
+                className="btn-ghost"
+                onClick={() => setShowAddModal(false)}
+              >
+                Cancelar
+              </button>
+
+              <button
+                className="btn-primary"
+                onClick={saveTask}
+              >
+                Salvar
+              </button>
+            </div>
           </div>
         </div>
       )}
+
 
       {/* MENU INFERIOR */}
       <nav className="bottom-nav">
