@@ -19,7 +19,7 @@ function formatDateBR(iso) {
 export default function App() {
   const today = todayISO();
 
-  const [activeTab, setActiveTab] = useState("Tarefas");
+  const [activeTab, setActiveTab] = useState("Agenda");
   const [viewYear, setViewYear] = useState(new Date().getFullYear());
   const [viewMonth, setViewMonth] = useState(new Date().getMonth());
   const [selectedDate, setSelectedDate] = useState(today);
@@ -41,9 +41,25 @@ export default function App() {
 
   /* ===== STATUS VISUAL ===== */
   function taskClass(t) {
-    if (t.done) return "task-done";        // verde
+    if (t.done) return "task-done";          // verde
     if (t.date < today) return "task-late"; // vermelho
-    return "task-today";                   // azul
+    return "task-today";                     // azul
+  }
+
+  /* ===== TAREFAS VISÍVEIS ===== */
+  function tasksForDisplay() {
+    if (selectedDate !== today) {
+      return tasksMap[selectedDate] || [];
+    }
+
+    const overdue = [];
+    Object.values(tasksMap).forEach(list =>
+      list.forEach(t => {
+        if (!t.done && t.date < today) overdue.push(t);
+      })
+    );
+
+    return [...overdue, ...(tasksMap[today] || [])];
   }
 
   function hasTasks(date) {
@@ -73,9 +89,9 @@ export default function App() {
       done: false,
     };
 
-    setTasksMap(p => ({
-      ...p,
-      [selectedDate]: [t, ...(p[selectedDate] || [])],
+    setTasksMap(prev => ({
+      ...prev,
+      [selectedDate]: [t, ...(prev[selectedDate] || [])],
     }));
 
     setTaskText("");
@@ -147,8 +163,8 @@ export default function App() {
                 <div className="day-badge badge-task">T</div>
               </div>
             )}
-            <div>{d.weekday}</div>
-            <strong>{d.day}</strong>
+            <div className="cal-week">{d.weekday}</div>
+            <div className="cal-day">{d.day}</div>
           </div>
         ))}
       </div>
@@ -159,15 +175,15 @@ export default function App() {
           {selectedDate === today ? "Hoje" : formatDateBR(selectedDate)}
         </div>
 
-        {(tasksMap[selectedDate] || []).length === 0 ? (
-          <div>Nenhuma tarefa.</div>
+        {tasksForDisplay().length === 0 ? (
+          <div className="empty">Nenhuma tarefa.</div>
         ) : (
-          (tasksMap[selectedDate] || []).map(t => (
+          tasksForDisplay().map(t => (
             <div key={t.id} className={`task-item ${taskClass(t)}`}>
-              <div>
+              <div className="task-info">
                 <div className="task-title">{t.title}</div>
                 <div className="task-meta">
-                  {formatDateBR(t.date)}
+                  Data: {formatDateBR(t.date)}
                 </div>
               </div>
 
@@ -188,13 +204,18 @@ export default function App() {
       {showAddModal && (
         <div className="modal-back" onClick={() => setShowAddModal(false)}>
           <div className="modal-card" onClick={e => e.stopPropagation()}>
+            <h3>Nova tarefa</h3>
             <input
               className="input"
               value={taskText}
               onChange={e => setTaskText(e.target.value)}
               placeholder="Digite a tarefa"
+              autoFocus
             />
-            <button onClick={saveTask}>Salvar</button>
+            <div className="modal-actions">
+              <button className="btn-ghost" onClick={() => setShowAddModal(false)}>Cancelar</button>
+              <button className="btn-primary" onClick={saveTask}>Salvar</button>
+            </div>
           </div>
         </div>
       )}
@@ -203,15 +224,32 @@ export default function App() {
       {showEditModal && (
         <div className="modal-back" onClick={() => setShowEditModal(false)}>
           <div className="modal-card" onClick={e => e.stopPropagation()}>
+            <h3>Editar tarefa</h3>
             <input
               className="input"
               value={taskText}
               onChange={e => setTaskText(e.target.value)}
             />
-            <button onClick={saveEdit}>Salvar</button>
+            <div className="modal-actions">
+              <button className="btn-ghost" onClick={() => setShowEditModal(false)}>Cancelar</button>
+              <button className="btn-primary" onClick={saveEdit}>Salvar</button>
+            </div>
           </div>
         </div>
       )}
+
+      {/* MENU INFERIOR */}
+      <nav className="bottom-nav">
+        {["Agenda", "Notas", "Alertas", "Mais"].map(tab => (
+          <div
+            key={tab}
+            className={`nav-btn ${activeTab === tab ? "nav-active" : ""}`}
+            onClick={() => setActiveTab(tab)}
+          >
+            {tab}
+          </div>
+        ))}
+      </nav>
     </div>
   );
 }
