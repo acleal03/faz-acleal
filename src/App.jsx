@@ -167,7 +167,7 @@ export default function App() {
               <div>
                 <div className="task-title">{t.title}</div>
                 <div className="task-meta">
-                  Data: {formatDateBR(t.date)}
+                  {formatDateBR(t.date)}
                 </div>
               </div>
 
