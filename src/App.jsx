@@ -13,7 +13,7 @@ const STORAGE_KEY = "faz_acleal_boston_v3";
 export default function App() {
   const today = todayISO();
 
-  const [activeTab, setActiveTab] = useState("agenda");
+  const [activeTab, setActiveTab] = useState("Tarefas");
 
   const [viewYear, setViewYear] = useState(new Date().getFullYear());
   const [viewMonth, setViewMonth] = useState(new Date().getMonth());
@@ -80,8 +80,8 @@ export default function App() {
         </div>
       </header>
 
-      {/* AGENDA */}
-      {activeTab === "agenda" && (
+      {/* Tarefas */}
+      {activeTab === "Tarefas" && (
         <>
           {[r1,r2,r3,r4,r5].map((row,i)=>(
             <div className="cal-row" key={i}>
@@ -100,7 +100,7 @@ export default function App() {
       )}
 
       {/* BOTÃO + */}
-      {activeTab === "agenda" && (
+      {activeTab === "Tarefas" && (
         <button className="fab-mobile" onClick={()=>setShowAddModal(true)}>
           +
         </button>
@@ -139,10 +139,10 @@ export default function App() {
       {/* 🔥 BARRA INFERIOR */}
       <nav className="bottom-nav">
         <div
-          className={`nav-btn ${activeTab==="agenda"?"nav-active":""}`}
-          onClick={()=>setActiveTab("agenda")}
+          className={`nav-btn ${activeTab==="Tarefas"?"nav-active":""}`}
+          onClick={()=>setActiveTab("Tarefas")}
         >
-          Agenda
+          Tarefas
         </div>
         <div
           className={`nav-btn ${activeTab==="notas"?"nav-active":""}`}
