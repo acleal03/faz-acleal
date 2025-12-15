@@ -244,3 +244,17 @@ html, body, #root {
   cursor: pointer;
   margin-left: 6px;
 }
+
+/* ===== CHECKBOX / CONCLUIR ===== */
+.task-actions button {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #ffffff; /* branco fixo */
+  opacity: 0.9;
+}
+
+.task-actions button:hover {
+  opacity: 1;
+}
