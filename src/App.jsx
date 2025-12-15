@@ -13,6 +13,8 @@ const STORAGE_KEY = "faz_acleal_boston_v3";
 export default function App() {
   const today = todayISO();
 
+  const [activeTab, setActiveTab] = useState("agenda");
+
   const [viewYear, setViewYear] = useState(new Date().getFullYear());
   const [viewMonth, setViewMonth] = useState(new Date().getMonth());
   const [selectedDate, setSelectedDate] = useState(today);
@@ -78,27 +80,33 @@ export default function App() {
         </div>
       </header>
 
-      {/* CALENDÁRIO */}
-      {[r1,r2,r3,r4,r5].map((row,i)=>(
-        <div className="cal-row" key={i}>
-          {row.map(d=>(
-            <div
-              key={d.date}
-              className={`cal-cell ${d.date===selectedDate?"cal-active":""}`}
-              onClick={()=>setSelectedDate(d.date)}
-            >
-              {d.day}
+      {/* AGENDA */}
+      {activeTab === "agenda" && (
+        <>
+          {[r1,r2,r3,r4,r5].map((row,i)=>(
+            <div className="cal-row" key={i}>
+              {row.map(d=>(
+                <div
+                  key={d.date}
+                  className={`cal-cell ${d.date===selectedDate?"cal-active":""}`}
+                  onClick={()=>setSelectedDate(d.date)}
+                >
+                  {d.day}
+                </div>
+              ))}
             </div>
           ))}
-        </div>
-      ))}
+        </>
+      )}
 
       {/* BOTÃO + */}
-      <button className="fab-mobile" onClick={()=>setShowAddModal(true)}>
-        +
-      </button>
+      {activeTab === "agenda" && (
+        <button className="fab-mobile" onClick={()=>setShowAddModal(true)}>
+          +
+        </button>
+      )}
 
-      {/* 🔥 MODAL NO TOPO (NÃO ATRAPALHA TECLADO) */}
+      {/* MODAL */}
       {showAddModal && (
         <div className="modal-back" onClick={()=>setShowAddModal(false)}>
           <div className="modal-card" onClick={e=>e.stopPropagation()}>
@@ -127,6 +135,34 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {/* 🔥 BARRA INFERIOR */}
+      <nav className="bottom-nav">
+        <div
+          className={`nav-btn ${activeTab==="agenda"?"nav-active":""}`}
+          onClick={()=>setActiveTab("agenda")}
+        >
+          Agenda
+        </div>
+        <div
+          className={`nav-btn ${activeTab==="notas"?"nav-active":""}`}
+          onClick={()=>setActiveTab("notas")}
+        >
+          Notas
+        </div>
+        <div
+          className={`nav-btn ${activeTab==="alertas"?"nav-active":""}`}
+          onClick={()=>setActiveTab("alertas")}
+        >
+          Alertas
+        </div>
+        <div
+          className={`nav-btn ${activeTab==="mais"?"nav-active":""}`}
+          onClick={()=>setActiveTab("mais")}
+        >
+          Mais
+        </div>
+      </nav>
     </div>
   );
 }

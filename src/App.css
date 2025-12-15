@@ -15,7 +15,7 @@ html, body, #root {
   background: linear-gradient(180deg,#0b0b0d,#050505);
   color: #f2f2f2;
   min-height: 100svh;
-  padding-bottom: 96px;
+  padding-bottom: calc(96px + env(safe-area-inset-bottom));
 }
 
 /* ================= HEADER ================= */
@@ -84,7 +84,7 @@ html, body, #root {
 .fab-mobile {
   position: fixed;
   right: 20px;
-  bottom: 88px;
+  bottom: calc(88px + env(safe-area-inset-bottom));
   width: 64px;
   height: 64px;
   border-radius: 50%;
@@ -95,29 +95,24 @@ html, body, #root {
   z-index: 30;
 }
 
-/* ================= MODAL SOBRE CALENDÁRIO ================= */
+/* ================= MODAL TOPO ================= */
 .modal-back {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,.55);
-  z-index: 9999;
+  z-index: 40;
 }
 
-/* modal “ancorado no topo” */
 .modal-card {
   position: fixed;
-  top: 92px; /* 🔥 logo abaixo do header */
+  top: 96px;
   left: 50%;
   transform: translateX(-50%);
-
   width: calc(100% - 24px);
   max-width: 420px;
-
   background: #0b0b0d;
   border-radius: 16px;
   padding: 16px;
-
-  box-shadow: 0 20px 50px rgba(0,0,0,.8);
 }
 
 .modal-title {
@@ -133,7 +128,6 @@ html, body, #root {
   border: none;
   background: rgba(255,255,255,.12);
   color: white;
-  font-size: 16px;
 }
 
 .modal-actions {
@@ -149,12 +143,36 @@ html, body, #root {
   color: white;
   padding: 10px 16px;
   border-radius: 10px;
-  font-size: 16px;
 }
 
 .btn-ghost {
   background: transparent;
   border: none;
   color: #ccc;
+}
+
+/* ================= BARRA INFERIOR ================= */
+.bottom-nav {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  height: 64px;
+  border-radius: 18px;
+  background: rgba(255,255,255,.08);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 20;
+}
+
+.nav-btn {
+  color: #ccc;
   font-size: 16px;
+}
+
+.nav-active {
+  color: #fff;
+  font-weight: 800;
 }
