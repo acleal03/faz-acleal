@@ -7,7 +7,7 @@ const STORAGE_KEY = "faz_acleal_boston_v3";
 export default function App() {
   const today = todayISO();
 
-  const [activeTab, setActiveTab] = useState("Agenda");
+  const [activeTab] = useState("Agenda");
   const [viewYear, setViewYear] = useState(new Date().getFullYear());
   const [viewMonth, setViewMonth] = useState(new Date().getMonth());
   const [selectedDate, setSelectedDate] = useState(today);
@@ -17,7 +17,9 @@ export default function App() {
   );
 
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [taskText, setTaskText] = useState("");
+  const [editingTask, setEditingTask] = useState(null);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(tasksMap));
@@ -26,10 +28,9 @@ export default function App() {
   const days = generateMonthDays(viewYear, viewMonth);
 
   /* =========================
-     LÓGICA DE TAREFAS
+     TAREFAS ATRASADAS
   ========================= */
-
-  function allOverdueTasks() {
+  function overdueTasks() {
     const list = [];
     Object.entries(tasksMap).forEach(([date, tasks]) => {
       if (date < today) {
@@ -44,10 +45,10 @@ export default function App() {
   function tasksForSelectedDay() {
     const base = tasksMap[selectedDate] || [];
     if (selectedDate !== today) return base;
-    return [...allOverdueTasks(), ...base];
+    return [...overdueTasks(), ...base];
   }
 
-  function taskStatus(t) {
+  function taskClass(t) {
     if (t.done) return "task-done";
     if (t.date < today) return "task-late";
     return "task-today";
@@ -70,6 +71,28 @@ export default function App() {
       map[task.date] = map[task.date].filter(t => t.id !== task.id);
       return map;
     });
+  }
+
+  function openEdit(task) {
+    setEditingTask(task);
+    setTaskText(task.title);
+    setShowEditModal(true);
+  }
+
+  function saveEdit() {
+    if (!taskText.trim()) return;
+
+    setTasksMap(prev => {
+      const map = { ...prev };
+      map[editingTask.date] = map[editingTask.date].map(t =>
+        t.id === editingTask.id ? { ...t, title: taskText.trim() } : t
+      );
+      return map;
+    });
+
+    setShowEditModal(false);
+    setEditingTask(null);
+    setTaskText("");
   }
 
   function saveTask() {
@@ -106,12 +129,9 @@ export default function App() {
     return (tasksMap[date] || []).length > 0;
   }
 
-  /* =========================
-     RENDER
-  ========================= */
-
   return (
     <div className="boston-root">
+      {/* HEADER */}
       <header className="b-header">
         <div className="app-title">faz@acleal</div>
         <div className="month-nav">
@@ -126,6 +146,7 @@ export default function App() {
         </div>
       </header>
 
+      {/* CALENDÁRIO */}
       <div className="calendar-grid">
         {days.map(d => (
           <div
@@ -144,6 +165,7 @@ export default function App() {
         ))}
       </div>
 
+      {/* LISTA */}
       <div className="panel">
         <div className="panel-title">
           {selectedDate === today ? "Hoje" : selectedDate.split("-").reverse().join("/")}
@@ -153,7 +175,7 @@ export default function App() {
           <div className="empty">Nenhuma tarefa.</div>
         ) : (
           tasksForSelectedDay().map(t => (
-            <div key={t.id} className={`task-item ${taskStatus(t)}`}>
+            <div key={t.id} className={`task-item ${taskClass(t)}`}>
               <div className="task-info">
                 <div className="task-title">{t.title}</div>
                 <div className="task-meta">
@@ -167,6 +189,7 @@ export default function App() {
                   checked={t.done}
                   onChange={() => toggleTask(t)}
                 />
+                <button onClick={() => openEdit(t)}>✏️</button>
                 <button onClick={() => deleteTask(t)}>🗑️</button>
               </div>
             </div>
@@ -174,8 +197,10 @@ export default function App() {
         )}
       </div>
 
+      {/* FAB */}
       <button className="fab-mobile" onClick={() => setShowAddModal(true)}>+</button>
 
+      {/* MODAL NOVA */}
       {showAddModal && (
         <div className="modal-back" onClick={() => setShowAddModal(false)}>
           <div className="modal-card" onClick={e => e.stopPropagation()}>
@@ -194,6 +219,25 @@ export default function App() {
         </div>
       )}
 
+      {/* MODAL EDITAR */}
+      {showEditModal && (
+        <div className="modal-back" onClick={() => setShowEditModal(false)}>
+          <div className="modal-card" onClick={e => e.stopPropagation()}>
+            <input
+              className="input"
+              value={taskText}
+              onChange={e => setTaskText(e.target.value)}
+              autoFocus
+            />
+            <div className="modal-actions">
+              <button className="btn-ghost" onClick={() => setShowEditModal(false)}>Cancelar</button>
+              <button className="btn-primary" onClick={saveEdit}>Salvar</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MENU */}
       <nav className="bottom-nav">
         <div className="nav-btn nav-active">Agenda</div>
         <div className="nav-btn">Notas</div>
