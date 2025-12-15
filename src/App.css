@@ -1,226 +1,115 @@
-/* =========================
-   RESET
-========================= */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+/* RESET */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body, #root { min-height: 100%; }
 
-html, body, #root {
-  min-height: 100%;
-}
-
-/* =========================
-   ROOT
-========================= */
 .boston-root {
   font-family: Inter, system-ui, Arial;
-  background: linear-gradient(180deg, #0b0b0d, #050505);
+  background: linear-gradient(180deg,#0b0b0d,#050505);
   color: #f2f2f2;
   min-height: 100svh;
   padding-bottom: 110px;
 }
 
-/* =========================
-   HEADER
-========================= */
+/* HEADER */
 .b-header {
   text-align: center;
   padding: 14px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255,255,255,.08);
 }
+.app-title { font-size: 26px; font-weight: 900; }
+.month-nav { display: flex; justify-content: center; gap: 14px; }
+.month-label { font-size: 20px; font-weight: 700; }
+.menu-btn { background: none; border: none; color: white; font-size: 26px; }
 
-.app-title {
-  font-size: 26px;
-  font-weight: 900;
-}
-
-.month-nav {
-  display: flex;
-  justify-content: center;
-  gap: 14px;
-  margin-top: 4px;
-}
-
-.month-label {
-  font-size: 20px;
-  font-weight: 700;
-}
-
-.menu-btn {
-  background: none;
-  border: none;
-  color: #ffffff;
-  font-size: 26px;
-  cursor: pointer;
-}
-
-/* =========================
-   CALENDÁRIO
-========================= */
+/* CALENDAR */
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 8px;
   padding: 12px;
 }
-
 .cal-cell {
   position: relative;
-  aspect-ratio: 1 / 1;
-  background: rgba(255, 255, 255, 0.06);
+  aspect-ratio: 1/1;
+  background: rgba(255,255,255,.06);
   border-radius: 14px;
   text-align: center;
   cursor: pointer;
   padding-top: 6px;
 }
+.cal-active { outline: 3px solid rgba(255,199,85,.6); }
+.cal-week { font-size: 12px; opacity: .7; }
+.cal-day { font-size: 18px; font-weight: 800; }
 
-.cal-active {
-  outline: 3px solid rgba(255, 199, 85, 0.6);
-}
-
-.cal-week {
-  font-size: 12px;
-  opacity: 0.7;
-}
-
-.cal-day {
-  font-size: 18px;
-  font-weight: 800;
-}
-
-/* =========================
-   BADGE (TAREFAS)
-========================= */
-.day-indicators {
-  position: absolute;
-  top: 6px;
-  left: 6px;
-}
-
+/* BADGE */
+.day-indicators { position: absolute; top: 6px; left: 6px; }
 .day-badge {
-  width: 18px;
-  height: 18px;
+  width: 18px; height: 18px;
   border-radius: 50%;
-  font-size: 10px;
-  font-weight: 900;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #6b46c1, #9f7aea);
-  color: #ffffff;
-  box-shadow: 0 4px 10px rgba(0,0,0,.45);
+  font-size: 10px; font-weight: 900;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg,#6b46c1,#9f7aea);
 }
 
-/* =========================
-   PANEL
-========================= */
+/* PANEL */
 .panel {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255,255,255,.05);
   border-radius: 18px;
   padding: 14px;
   margin: 12px;
 }
+.panel-title { font-size: 18px; font-weight: 800; margin-bottom: 12px; }
+.empty { opacity: .7; }
 
-.panel-title {
-  font-size: 18px;
-  font-weight: 800;
-  margin-bottom: 12px;
-}
-
-.empty {
-  opacity: 0.7;
-}
-
-/* =========================
-   TASKS
-========================= */
+/* TASKS */
 .task-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255,255,255,.06);
   border-radius: 14px;
   padding: 12px;
   margin-bottom: 10px;
 }
 
-.task-info {
-  flex: 1;
-}
+/* CORES DEFINIDAS */
+.task-today { border-left: 12px solid #f59e0b; }   /* laranja */
+.task-late  { border-left: 12px solid #ef4444; }   /* vermelho */
+.task-done  { border-left: 12px solid #3b82f6; }   /* azul */
 
-.task-title {
-  font-size: 16px;
-  font-weight: 700;
-}
-
-.task-meta {
-  font-size: 12px;
-  opacity: 0.7;
-}
-
-/* CORES DEFINITIVAS */
-.task-today {
-  border-left: 12px solid #3b82f6; /* azul */
-}
-
-.task-late {
-  border-left: 12px solid #ef4444; /* vermelho */
-}
-
-.task-done {
-  border-left: 12px solid #22c55e; /* verde */
-}
-
-/* =========================
-   AÇÕES / CHECKBOX
-========================= */
 .task-actions {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-/* CHECKBOX PERSONALIZADO */
+/* CHECKBOX */
 .task-actions input[type="checkbox"] {
   appearance: none;
-  -webkit-appearance: none;
-
   width: 18px;
   height: 18px;
+  background: #fff;
   border-radius: 4px;
-
-  background: #ffffff;        /* fundo branco */
-  border: 2px solid #ffffff;  /* borda branca */
-
-  cursor: pointer;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
-
-/* CHECK SÓ QUANDO CONCLUÍDO */
 .task-actions input[type="checkbox"]:checked::after {
   content: "✔";
+  display: block;
+  text-align: center;
+  color: #000;
   font-size: 14px;
   font-weight: 900;
-  color: #000000; /* preto sobre branco */
 }
 
-/* ÍCONES */
-.task-actions button {
-  background: none;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-  color: #ffffff;
+/* ÍCONES SÓ NO HOVER / TOQUE */
+.task-item .task-actions button {
+  opacity: 0;
+  transition: opacity .2s;
+}
+.task-item:hover .task-actions button {
+  opacity: 1;
 }
 
-/* =========================
-   FAB
-========================= */
+/* FAB */
 .fab-mobile {
   position: fixed;
   right: 20px;
@@ -228,28 +117,22 @@ html, body, #root {
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  background: linear-gradient(90deg, #6b46c1, #9f7aea);
-  color: #ffffff;
+  background: linear-gradient(90deg,#6b46c1,#9f7aea);
+  color: white;
   font-size: 36px;
   border: none;
-  cursor: pointer;
-  box-shadow: 0 14px 36px rgba(103, 78, 210, 0.35);
 }
 
-/* =========================
-   MODAL
-========================= */
+/* MODAL */
 .modal-back {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0,0,0,.6);
   display: flex;
   justify-content: center;
   align-items: flex-start;
   padding-top: 80px;
-  z-index: 50;
 }
-
 .modal-card {
   background: #0b0b0d;
   padding: 16px;
@@ -257,42 +140,34 @@ html, body, #root {
   width: 90%;
   max-width: 420px;
 }
-
 .input {
   width: 100%;
   padding: 12px;
   border-radius: 12px;
   border: none;
-  background: rgba(255, 255, 255, 0.12);
-  color: #ffffff;
+  background: rgba(255,255,255,.12);
+  color: white;
   margin-bottom: 12px;
 }
-
 .modal-actions {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
 }
-
 .btn-primary {
   background: #6b46c1;
-  color: #ffffff;
+  color: white;
   border: none;
   padding: 10px 16px;
   border-radius: 10px;
-  cursor: pointer;
 }
-
 .btn-ghost {
   background: none;
   border: none;
-  color: #bbbbbb;
-  cursor: pointer;
+  color: #bbb;
 }
 
-/* =========================
-   BOTTOM NAV
-========================= */
+/* BOTTOM NAV */
 .bottom-nav {
   position: fixed;
   left: 12px;
@@ -300,19 +175,10 @@ html, body, #root {
   bottom: 12px;
   height: 64px;
   border-radius: 18px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255,255,255,.08);
   display: flex;
   justify-content: space-around;
   align-items: center;
-  backdrop-filter: blur(10px);
 }
-
-.nav-btn {
-  color: #cccccc;
-  cursor: pointer;
-}
-
-.nav-active {
-  color: #ffffff;
-  font-weight: 800;
-}
+.nav-btn { color: #ccc; }
+.nav-active { color: #fff; font-weight: 800; }

@@ -1,176 +1,205 @@
-/* RESET */
-* { box-sizing: border-box; margin: 0; padding: 0; }
+import React, { useEffect, useState } from "react";
+import "./App.css";
+import { todayISO, uid, generateMonthDays, localISODateTime } from "./utils";
 
-html, body, #root { min-height: 100%; }
+const STORAGE_KEY = "faz_acleal_boston_v3";
 
-.boston-root {
-  font-family: Inter, system-ui, Arial;
-  background: linear-gradient(180deg,#0b0b0d,#050505);
-  color: #f2f2f2;
-  min-height: 100svh;
-  padding-bottom: 110px;
-}
+export default function App() {
+  const today = todayISO();
 
-/* HEADER */
-.b-header {
-  text-align: center;
-  padding: 14px;
-  border-bottom: 1px solid rgba(255,255,255,.08);
-}
-.app-title { font-size: 26px; font-weight: 900; }
-.month-nav { display: flex; justify-content: center; gap: 14px; }
-.month-label { font-size: 20px; font-weight: 700; }
-.menu-btn { background: none; border: none; color: white; font-size: 26px; }
+  const [activeTab, setActiveTab] = useState("Agenda");
+  const [viewYear, setViewYear] = useState(new Date().getFullYear());
+  const [viewMonth, setViewMonth] = useState(new Date().getMonth());
+  const [selectedDate, setSelectedDate] = useState(today);
 
-/* CALENDAR */
-.calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 8px;
-  padding: 12px;
-}
-.cal-cell {
-  position: relative;
-  aspect-ratio: 1/1;
-  background: rgba(255,255,255,.06);
-  border-radius: 14px;
-  text-align: center;
-  cursor: pointer;
-  padding-top: 6px;
-}
-.cal-active { outline: 3px solid rgba(255,199,85,.6); }
-.cal-week { font-size: 12px; opacity: .7; }
-.cal-day { font-size: 18px; font-weight: 800; }
+  const [tasksMap, setTasksMap] = useState(() =>
+    JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}
+  );
 
-/* BADGE */
-.day-indicators { position: absolute; top: 6px; left: 6px; }
-.day-badge {
-  width: 18px; height: 18px;
-  border-radius: 50%;
-  font-size: 10px; font-weight: 900;
-  display: flex; align-items: center; justify-content: center;
-  background: linear-gradient(135deg,#6b46c1,#9f7aea);
-  color: #fff;
-}
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [taskText, setTaskText] = useState("");
 
-/* PANEL */
-.panel {
-  background: rgba(255,255,255,.05);
-  border-radius: 18px;
-  padding: 14px;
-  margin: 12px;
-}
-.panel-title { font-size: 18px; font-weight: 800; margin-bottom: 12px; }
-.empty { opacity: .7; }
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasksMap));
+  }, [tasksMap]);
 
-/* TASKS */
-.task-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: rgba(255,255,255,.06);
-  border-radius: 14px;
-  padding: 12px;
-  margin-bottom: 10px;
-}
-.task-info { flex: 1; }
-.task-title { font-size: 16px; font-weight: 700; }
-.task-meta { font-size: 12px; opacity: .7; }
+  const days = generateMonthDays(viewYear, viewMonth);
 
-.task-today { border-left: 12px solid #3b82f6; }
-.task-late  { border-left: 12px solid #ef4444; }
-.task-done  { border-left: 12px solid #22c55e; }
+  /* =========================
+     LÓGICA DE TAREFAS
+  ========================= */
 
-/* ACTIONS */
-.task-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.task-actions input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  accent-color: #ffffff;
-  cursor: pointer;
-}
-.task-actions button {
-  background: none;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-  color: #ffffff;
-}
+  function allOverdueTasks() {
+    const list = [];
+    Object.entries(tasksMap).forEach(([date, tasks]) => {
+      if (date < today) {
+        tasks.forEach(t => {
+          if (!t.done) list.push(t);
+        });
+      }
+    });
+    return list;
+  }
 
-/* FAB */
-.fab-mobile {
-  position: fixed;
-  right: 20px;
-  bottom: 96px;
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: linear-gradient(90deg,#6b46c1,#9f7aea);
-  color: white;
-  font-size: 36px;
-  border: none;
-}
+  function tasksForSelectedDay() {
+    const base = tasksMap[selectedDate] || [];
+    if (selectedDate !== today) return base;
+    return [...allOverdueTasks(), ...base];
+  }
 
-/* MODAL */
-.modal-back {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.6);
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding-top: 80px;
-}
-.modal-card {
-  background: #0b0b0d;
-  padding: 16px;
-  border-radius: 18px;
-  width: 90%;
-  max-width: 420px;
-}
-.input {
-  width: 100%;
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  background: rgba(255,255,255,.12);
-  color: white;
-  margin-bottom: 12px;
-}
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-}
-.btn-primary {
-  background: #6b46c1;
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 10px;
-}
-.btn-ghost {
-  background: none;
-  border: none;
-  color: #bbb;
-}
+  function taskStatus(t) {
+    if (t.done) return "task-done";
+    if (t.date < today) return "task-late";
+    return "task-today";
+  }
 
-/* BOTTOM NAV */
-.bottom-nav {
-  position: fixed;
-  left: 12px;
-  right: 12px;
-  bottom: 12px;
-  height: 64px;
-  border-radius: 18px;
-  background: rgba(255,255,255,.08);
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
+  function toggleTask(task) {
+    setTasksMap(prev => {
+      const map = { ...prev };
+      map[task.date] = map[task.date].map(t =>
+        t.id === task.id ? { ...t, done: !t.done } : t
+      );
+      return map;
+    });
+  }
+
+  function deleteTask(task) {
+    if (!confirm("Excluir tarefa?")) return;
+    setTasksMap(prev => {
+      const map = { ...prev };
+      map[task.date] = map[task.date].filter(t => t.id !== task.id);
+      return map;
+    });
+  }
+
+  function saveTask() {
+    if (!taskText.trim()) return;
+
+    const t = {
+      id: uid(),
+      title: taskText.trim(),
+      date: selectedDate,
+      createdAt: localISODateTime(),
+      done: false,
+    };
+
+    setTasksMap(prev => ({
+      ...prev,
+      [selectedDate]: [t, ...(prev[selectedDate] || [])],
+    }));
+
+    setTaskText("");
+    setShowAddModal(false);
+  }
+
+  function prevMonth() {
+    setViewMonth(m => (m === 0 ? 11 : m - 1));
+    if (viewMonth === 0) setViewYear(y => y - 1);
+  }
+
+  function nextMonth() {
+    setViewMonth(m => (m === 11 ? 0 : m + 1));
+    if (viewMonth === 11) setViewYear(y => y + 1);
+  }
+
+  function hasTasks(date) {
+    return (tasksMap[date] || []).length > 0;
+  }
+
+  /* =========================
+     RENDER
+  ========================= */
+
+  return (
+    <div className="boston-root">
+      <header className="b-header">
+        <div className="app-title">faz@acleal</div>
+        <div className="month-nav">
+          <button className="menu-btn" onClick={prevMonth}>←</button>
+          <div className="month-label">
+            {new Date(viewYear, viewMonth).toLocaleString("pt-BR", {
+              month: "long",
+              year: "numeric",
+            })}
+          </div>
+          <button className="menu-btn" onClick={nextMonth}>→</button>
+        </div>
+      </header>
+
+      <div className="calendar-grid">
+        {days.map(d => (
+          <div
+            key={d.date}
+            className={`cal-cell ${d.date === selectedDate ? "cal-active" : ""}`}
+            onClick={() => setSelectedDate(d.date)}
+          >
+            {hasTasks(d.date) && (
+              <div className="day-indicators">
+                <div className="day-badge">T</div>
+              </div>
+            )}
+            <div className="cal-week">{d.weekday}</div>
+            <div className="cal-day">{d.day}</div>
+          </div>
+        ))}
+      </div>
+
+      <div className="panel">
+        <div className="panel-title">
+          {selectedDate === today ? "Hoje" : selectedDate.split("-").reverse().join("/")}
+        </div>
+
+        {tasksForSelectedDay().length === 0 ? (
+          <div className="empty">Nenhuma tarefa.</div>
+        ) : (
+          tasksForSelectedDay().map(t => (
+            <div key={t.id} className={`task-item ${taskStatus(t)}`}>
+              <div className="task-info">
+                <div className="task-title">{t.title}</div>
+                <div className="task-meta">
+                  Data: {t.date.split("-").reverse().join("/")}
+                </div>
+              </div>
+
+              <div className="task-actions">
+                <input
+                  type="checkbox"
+                  checked={t.done}
+                  onChange={() => toggleTask(t)}
+                />
+                <button onClick={() => deleteTask(t)}>🗑️</button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      <button className="fab-mobile" onClick={() => setShowAddModal(true)}>+</button>
+
+      {showAddModal && (
+        <div className="modal-back" onClick={() => setShowAddModal(false)}>
+          <div className="modal-card" onClick={e => e.stopPropagation()}>
+            <input
+              className="input"
+              placeholder="Digite a tarefa"
+              value={taskText}
+              onChange={e => setTaskText(e.target.value)}
+              autoFocus
+            />
+            <div className="modal-actions">
+              <button className="btn-ghost" onClick={() => setShowAddModal(false)}>Cancelar</button>
+              <button className="btn-primary" onClick={saveTask}>Salvar</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <nav className="bottom-nav">
+        <div className="nav-btn nav-active">Agenda</div>
+        <div className="nav-btn">Notas</div>
+        <div className="nav-btn">Alertas</div>
+        <div className="nav-btn">Mais</div>
+      </nav>
+    </div>
+  );
 }
-.nav-btn { color: #ccc; }
-.nav-active { color: #fff; font-weight: 800; }
