@@ -36,6 +36,28 @@ export default function App() {
   const monthDays = generateMonthDays(viewYear, viewMonth);
   const [row1, row2, row3, row4, row5] = splitThreeRows(monthDays);
 
+  {/* ================= LISTA DE TAREFAS DO DIA ================= */}
+<div className="panel">
+  <div className="panel-title">
+    {selectedDate === today ? "Hoje" : selectedDate}
+  </div>
+
+  {(tasksMap[selectedDate] || []).length === 0 ? (
+    <div className="empty-large">Nenhuma tarefa.</div>
+  ) : (
+    (tasksMap[selectedDate] || []).map((t) => (
+      <div key={t.id} className="task-item border-blue">
+        <div className="task-left">
+          <div className="task-title">{t.title}</div>
+          <div className="task-meta">
+            Criada em {t.createdAt}
+          </div>
+        </div>
+      </div>
+    ))
+  )}
+</div>
+
   /* ================= HELPERS ================= */
 
   // existe tarefa neste dia?
