@@ -231,3 +231,16 @@ html, body, #root {
   color: #fff;
   font-weight: 800;
 }
+
+/* ===== STATUS DAS TAREFAS ===== */
+.task-today { border-left: 12px solid #3b82f6; } /* azul */
+.task-late  { border-left: 12px solid #ef4444; } /* vermelho */
+.task-done  { border-left: 12px solid #22c55e; } /* verde */
+
+.task-actions button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  margin-left: 6px;
+}
