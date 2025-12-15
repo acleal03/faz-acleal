@@ -4,18 +4,15 @@ import {
   todayISO,
   uid,
   generateMonthDays,
-  splitThreeRows,
   localISODateTime,
 } from "./utils";
 
 const STORAGE_KEY = "faz_acleal_boston_v3";
 
 export default function App() {
-  /* ================= ESTADO PRINCIPAL ================= */
   const today = todayISO();
 
   const [activeTab, setActiveTab] = useState("Tarefas");
-
   const [viewYear, setViewYear] = useState(new Date().getFullYear());
   const [viewMonth, setViewMonth] = useState(new Date().getMonth());
   const [selectedDate, setSelectedDate] = useState(today);
@@ -27,71 +24,26 @@ export default function App() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [taskText, setTaskText] = useState("");
 
-  /* ================= PERSISTÊNCIA ================= */
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(tasksMap));
   }, [tasksMap]);
 
-  /* ================= CALENDÁRIO ================= */
-  const monthDays = generateMonthDays(viewYear, viewMonth);
-  const [row1, row2, row3, row4, row5] = splitThreeRows(monthDays);
+  const days = generateMonthDays(viewYear, viewMonth);
 
-  {/* ================= LISTA DE TAREFAS DO DIA ================= */}
-<div className="panel">
-  <div className="panel-title">
-    {selectedDate === today ? "Hoje" : selectedDate}
-  </div>
-
-  {(tasksMap[selectedDate] || []).length === 0 ? (
-    <div className="empty-large">Nenhuma tarefa.</div>
-  ) : (
-    (tasksMap[selectedDate] || []).map((t) => (
-      <div key={t.id} className="task-item border-blue">
-        <div className="task-left">
-          <div className="task-title">{t.title}</div>
-          <div className="task-meta">
-            Criada em {t.createdAt}
-          </div>
-        </div>
-      </div>
-    ))
-  )}
-</div>
-
-  /* ================= HELPERS ================= */
-
-  // existe tarefa neste dia?
   function hasTasks(date) {
     return Array.isArray(tasksMap[date]) && tasksMap[date].length > 0;
   }
 
-  // preparado para alertas (quando existir estado de alertas)
-  function hasAlerts(date) {
-    return false; // por enquanto não existe alerta no app
-  }
-
-  /* ================= NAVEGAÇÃO DE MESES ================= */
   function prevMonth() {
-    setViewMonth((m) => {
-      if (m === 0) {
-        setViewYear((y) => y - 1);
-        return 11;
-      }
-      return m - 1;
-    });
+    setViewMonth(m => (m === 0 ? 11 : m - 1));
+    if (viewMonth === 0) setViewYear(y => y - 1);
   }
 
   function nextMonth() {
-    setViewMonth((m) => {
-      if (m === 11) {
-        setViewYear((y) => y + 1);
-        return 0;
-      }
-      return m + 1;
-    });
+    setViewMonth(m => (m === 11 ? 0 : m + 1));
+    if (viewMonth === 11) setViewYear(y => y + 1);
   }
 
-  /* ================= TAREFAS ================= */
   function saveTask() {
     if (!taskText.trim()) return;
 
@@ -100,112 +52,102 @@ export default function App() {
       title: taskText.trim(),
       date: selectedDate,
       createdAt: localISODateTime(),
-      done: false,
     };
 
-    setTasksMap((prev) => ({
-      ...prev,
-      [selectedDate]: [t, ...(prev[selectedDate] || [])],
+    setTasksMap(p => ({
+      ...p,
+      [selectedDate]: [t, ...(p[selectedDate] || [])],
     }));
 
     setTaskText("");
     setShowAddModal(false);
   }
 
-  /* ================= RENDER ================= */
   return (
     <div className="boston-root">
-      {/* ================= HEADER ================= */}
+      {/* HEADER */}
       <header className="b-header">
         <div className="app-title">faz@acleal</div>
-
         <div className="month-nav">
           <button className="menu-btn" onClick={prevMonth}>←</button>
-
           <div className="month-label">
             {new Date(viewYear, viewMonth).toLocaleString("pt-BR", {
               month: "long",
               year: "numeric",
             })}
           </div>
-
           <button className="menu-btn" onClick={nextMonth}>→</button>
         </div>
       </header>
 
-      {/* ================= CALENDÁRIO ================= */}
-      {[row1, row2, row3, row4, row5].map((row, idx) => (
-        <div className="cal-row" key={idx}>
-          {row.map((d) => (
-            <div
-              key={d.date}
-              className={`cal-cell ${
-                d.date === selectedDate ? "cal-active" : ""
-              }`}
-              onClick={() => setSelectedDate(d.date)}
-            >
-              {/* 🔥 INDICADORES PREMIUM */}
-              {(hasTasks(d.date) || hasAlerts(d.date)) && (
-                <div className="day-indicators">
-                  {hasTasks(d.date) && (
-                    <div className="day-badge badge-task">T</div>
-                  )}
-                  {hasAlerts(d.date) && (
-                    <div className="day-badge badge-alert">A</div>
-                  )}
-                </div>
-              )}
+      {/* CALENDÁRIO */}
+      <div className="calendar-grid">
+        {days.map(d => (
+          <div
+            key={d.date}
+            className={`cal-cell ${d.date === selectedDate ? "cal-active" : ""}`}
+            onClick={() => setSelectedDate(d.date)}
+          >
+            {hasTasks(d.date) && (
+              <div className="day-indicators">
+                <div className="day-badge badge-task">T</div>
+              </div>
+            )}
+            <div>{d.weekday}{d.day}</div>
+          </div>
+        ))}
+      </div>
 
-              <div className="cal-week">{d.weekday}</div>
-              <div className="cal-num">{d.day}</div>
-            </div>
-          ))}
+      {/* LISTA DE TAREFAS */}
+      <div className="panel">
+        <div className="panel-title">
+          {selectedDate === today ? "Hoje" : selectedDate}
         </div>
-      ))}
 
-      {/* ================= BOTÃO + ================= */}
-      <button
-        className="fab-mobile"
-        onClick={() => setShowAddModal(true)}
-      >
+        {(tasksMap[selectedDate] || []).length === 0 ? (
+          <div>Nenhuma tarefa.</div>
+        ) : (
+          (tasksMap[selectedDate] || []).map(t => (
+            <div key={t.id} className="task-item">
+              {t.title}
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* FAB */}
+      <button className="fab-mobile" onClick={() => setShowAddModal(true)}>
         +
       </button>
 
-      {/* ================= MODAL NOVA TAREFA ================= */}
+      {/* MODAL */}
       {showAddModal && (
         <div className="modal-back" onClick={() => setShowAddModal(false)}>
-          <div
-            className="modal-card"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="modal-title">Nova tarefa</div>
-
+          <div className="modal-card" onClick={e => e.stopPropagation()}>
             <input
               className="input"
               placeholder="Digite a tarefa"
               value={taskText}
-              onChange={(e) => setTaskText(e.target.value)}
+              onChange={e => setTaskText(e.target.value)}
               autoFocus
-              onKeyDown={(e) => {
-                if (e.key === "Enter") saveTask();
-                if (e.key === "Escape") setShowAddModal(false);
-              }}
             />
-
-            <div className="modal-actions">
-              <button
-                className="btn-ghost"
-                onClick={() => setShowAddModal(false)}
-              >
-                Cancelar
-              </button>
-              <button className="btn-primary" onClick={saveTask}>
-                Salvar
-              </button>
-            </div>
+            <button onClick={saveTask}>Salvar</button>
           </div>
         </div>
       )}
+
+      {/* MENU INFERIOR */}
+      <nav className="bottom-nav">
+        <div
+          className={`nav-btn ${activeTab==="Tarefas"?"nav-active":""}`}
+          onClick={()=>setActiveTab("Tarefas")}
+        >
+          Agenda
+        </div>
+        <div className="nav-btn">Notas</div>
+        <div className="nav-btn">Alertas</div>
+        <div className="nav-btn">Mais</div>
+      </nav>
     </div>
   );
 }
