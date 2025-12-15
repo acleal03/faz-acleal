@@ -1,39 +1,49 @@
+/* =========================
+   UTILS
+========================= */
+
+/* Data atual YYYY-MM-DD */
 export function todayISO() {
   const d = new Date();
-  return d.toISOString().slice(0, 10);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
 }
 
+/* ID simples */
 export function uid() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 }
 
+/* Data + hora local */
 export function localISODateTime() {
   const d = new Date();
-  return d.toISOString().replace("T", " ").slice(0, 16);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  const hh = String(d.getHours()).padStart(2, "0");
+  const mm = String(d.getMinutes()).padStart(2, "0");
+  return `${y}-${m}-${day} ${hh}:${mm}`;
 }
 
+/* Dias do mês */
 export function generateMonthDays(year, month) {
-  const days = [];
   const lastDay = new Date(year, month + 1, 0).getDate();
   const weekdays = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 
+  const days = [];
   for (let d = 1; d <= lastDay; d++) {
     const dateObj = new Date(year, month, d);
+    const yyyy = year;
+    const mm = String(month + 1).padStart(2, "0");
+    const dd = String(d).padStart(2, "0");
+
     days.push({
-      date: dateObj.toISOString().slice(0, 10),
-      day: d,
+      date: `${yyyy}-${mm}-${dd}`,
+      day: dd,
       weekday: weekdays[dateObj.getDay()],
     });
   }
   return days;
-}
-
-export function splitThreeRows(days) {
-  return [
-    days.slice(0, 7),
-    days.slice(7, 14),
-    days.slice(14, 21),
-    days.slice(21, 28),
-    days.slice(28, 35),
-  ];
 }
